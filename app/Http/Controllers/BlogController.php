@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BlogCreatedMail;
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
@@ -14,8 +16,8 @@ class BlogController extends Controller
     public function index()
     {
         $blog = Blog::where('user_id', request()->user()->id)
-        ->orderBy('id', 'desc')
-        ->paginate(10);
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         return view('blog.index', ['blogs' => $blog]);
     }
@@ -33,7 +35,7 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-       $data = $request->validate([
+        $data = $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
             'banner_image' => 'required|image',
@@ -41,15 +43,22 @@ class BlogController extends Controller
 
         $data['user_id'] = request()->user()->id;
 
-        if(request()->hasFile('banner_image')) {
+        if (request()->hasFile('banner_image')) {
             $data['banner_image'] = $request->file('banner_image')->store('images', 'public');
         }
 
         Blog::create($data);
 
+        // Send queued confirmation email
+        $mailData = [
+            'user_name' => $request->user()->name,
+            'title' => $data['title'],
+            'description' => $data['description'],
+        ];
+
+        Mail::to($request->user()->email)->queue(new BlogCreatedMail($mailData));
+
         return to_route('blog.index')->with('success', 'Blog created successfully');
-
-
     }
 
     /**
@@ -75,13 +84,13 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
-       $data = $request->validate([
+        $data = $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
         ]);
 
-        if(request()->hasFile('banner_image')) {
-            if($blog->banner_image) {
+        if (request()->hasFile('banner_image')) {
+            if ($blog->banner_image) {
                 Storage::disk('public')->delete($blog->banner_image);
             }
 
@@ -92,7 +101,6 @@ class BlogController extends Controller
 
 
         return to_route('blog.index', ['blog' => $blog])->with('success', 'Blog updated successfully');
-
     }
 
     /**
@@ -105,7 +113,7 @@ class BlogController extends Controller
             Storage::disk('public')->delete($blog->banner_image);
         }
         $blog->delete();
-        
+
         return to_route('blog.index')->with('success', 'Blog deleted successfully');
     }
 }
