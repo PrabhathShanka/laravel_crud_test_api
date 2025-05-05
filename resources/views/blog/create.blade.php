@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Page Heading -->
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Create New Blog</h2>
+            <h2 class="text-2xl font-bold text-gray-800 blog-create-title">Create New Blog</h2>
             <a href="{{ route('blog.index') }}"
                 class="px-4 py-2 bg-gray-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-gray-700 transition">
                 ← Back to Blogs
@@ -10,7 +10,7 @@
         </div>
 
         <!-- Form Container -->
-        <div class="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto">
+        <div class="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto ">
             <form action="{{ route('blog.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <!-- Title Field -->
