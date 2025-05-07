@@ -12,7 +12,10 @@ Route::get('/', function () {
 //Resources Route
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::resource('blog', BlogController::class);
+   // Route::resource('blog', BlogController::class);
+
+   Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+   
 });
 
 Route::get('/dashboard', function () {
