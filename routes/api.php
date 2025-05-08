@@ -9,6 +9,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware(['web', 'auth.session'])->group(function () {
-
     Route::apiResource('events', EventController::class);
 });
