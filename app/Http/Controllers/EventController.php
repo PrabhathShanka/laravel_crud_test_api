@@ -63,18 +63,18 @@ class EventController extends Controller
     }
 
     public function show(Event $event)
-{
-    return response()->json([
-        'id' => $event->id,
-        'title' => $event->title,
-        'description' => $event->description,
-        'venue' => $event->venue,
-        'date' => $event->date,
-        'time' => $event->time,
-        'image' => $event->image ? asset('storage/' . $event->image) : null,
-        'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-    ]);
-}
+    {
+        return response()->json([
+            'id' => $event->id,
+            'title' => $event->title,
+            'description' => $event->description,
+            'venue' => $event->venue,
+            'date' => $event->date,
+            'time' => $event->time,
+            'image' => $event->image ? asset('storage/' . $event->image) : null,
+            'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+        ]);
+    }
     public function store(StoreEventRequest $request)
     {
         try {
@@ -102,39 +102,39 @@ class EventController extends Controller
             return response()->json(['error' => 'Unable to create event.'], 500);
         }
     }
-    public function update(UpdateTaskRequest $request, Task $task)
-    {
-        try {
-            Gate::authorize('update', $task);
+    // public function update(UpdateTaskRequest $request, Task $task)
+    // {
+    //     try {
+    //         Gate::authorize('update', $task);
 
-            $task->update($request->validated());
+    //         $task->update($request->validated());
 
-            if ($request->hasFile('attachment')) {
-                if ($task->attachment) {
-                    Storage::disk('public')->delete($task->attachment);
-                }
-                $path = $request->file('attachment')->store('attachments', 'public');
-                $task->update(['attachment' => $path]);
-            }
+    //         if ($request->hasFile('attachment')) {
+    //             if ($task->attachment) {
+    //                 Storage::disk('public')->delete($task->attachment);
+    //             }
+    //             $path = $request->file('attachment')->store('attachments', 'public');
+    //             $task->update(['attachment' => $path]);
+    //         }
 
-            return response()->json($task, 200);
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-            Log::warning('Unauthorized task update attempt', [
-                'user_id' => Auth::id(),
-                'task_id' => $task->id,
-            ]);
+    //         return response()->json($task, 200);
+    //     } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+    //         Log::warning('Unauthorized task update attempt', [
+    //             'user_id' => Auth::id(),
+    //             'task_id' => $task->id,
+    //         ]);
 
-            return response()->json(['error' => 'Forbidden'], 403);
-        } catch (\Exception $e) {
-            Log::error('Error updating task', [
-                'user_id' => Auth::id(),
-                'task_id' => $task->id,
-                'exception' => $e,
-            ]);
+    //         return response()->json(['error' => 'Forbidden'], 403);
+    //     } catch (\Exception $e) {
+    //         Log::error('Error updating task', [
+    //             'user_id' => Auth::id(),
+    //             'task_id' => $task->id,
+    //             'exception' => $e,
+    //         ]);
 
-            return response()->json(['error' => 'Unable to update task.'], 500);
-        }
-    }
+    //         return response()->json(['error' => 'Unable to update task.'], 500);
+    //     }
+    // }
 
     public function destroy(Event $event)
     {

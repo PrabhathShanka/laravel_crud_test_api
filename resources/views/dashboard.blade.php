@@ -135,6 +135,37 @@
                 });
             }
 
+            function openViewModal(eventId) {
+                $.ajax({
+                    url: `/api/events/${eventId}`,
+                    method: 'GET',
+                    success: function(event) {
+                        // Populate all fields
+                        $('#view_title').text(event.title);
+                        $('#view_description').text(event.description || 'No description provided');
+                        $('#view_venue').text(event.venue || 'N/A');
+                        $('#view_date').text(event.date);
+                        $('#view_time').text(event.time || 'N/A');
+
+                        // Handle image display
+                        const imageContainer = $('#view_image');
+                        const eventImage = $('#event_image');
+
+                        if (event.image) {
+                            eventImage.attr('src', event.image);
+                            imageContainer.show();
+                        } else {
+                            imageContainer.hide();
+                        }
+
+                        // Open the modal
+                        window.dispatchEvent(new CustomEvent('open-modal', { detail: 'view-event' }));
+                    },
+                    error: function() {
+                        Swal.fire('Error', 'Unable to fetch event details.', 'error');
+                    }
+                });
+            }
         </script>
     @endpush
 </x-app-layout>
