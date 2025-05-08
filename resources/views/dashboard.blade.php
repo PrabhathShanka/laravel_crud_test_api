@@ -71,8 +71,7 @@
                         let html = '';
                         events.forEach(event => {
                             const status = event.status ?? 'Pending';
-                            const statusClass = getStatusColorClass(status);
-
+                            
                             html += `
                                     <tr>
                                         <td class="px-4 py-2">${event.title}</td>
@@ -101,133 +100,6 @@
                 });
             }
 
-            function openEditModal(taskId) {
-                $.ajax({
-                    url: `/api/events/${taskId}`,
-                    method: 'GET',
-                    success: function(task) {
-                        console.log(task);
-
-                        $('#edit_task_id').val(task.id);
-                        $('#edit_title').val(task.title);
-                        $('#edit_description').val(task.description);
-                        $('#edit_status').val(task.status);
-                        $('#edit_due_time').val(task.time);
-
-                        // Show current attachment if exists
-                        if (task.attachment) {
-                            $('#current_attachment').html(`
-                                <div class="mt-4 space-y-2">
-                                    <img src="${FILESYSTEM_URL}/storage/${task.attachment}"
-                                        alt="Attachment"
-                                        class="object-cover w-32 h-32 border rounded shadow" />
-                                </div>
-                            `);
-                        } else {
-                            $('#current_attachment').html(
-                                '<p class="text-sm text-gray-600">No file attached</p>');
-                        }
-
-                        // Open modal
-                        window.dispatchEvent(new CustomEvent('open-modal', {
-                            detail: 'edit-task'
-                        }));
-                    },
-                    error: function() {api/tasks
-                        Swal.fire('Error', 'Unable to fetch task details', 'error');
-                    }
-                });
-            }
-
-            function deleteTask(taskId) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: `/api/tasks/${taskId}`,
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function() {
-                                Swal.fire('Deleted!', 'Your task has been deleted.', 'success');
-                                fetchTasks();
-                            },
-                            error: function() {
-                                Swal.fire('Error', 'Unable to delete task', 'error');
-                            }
-                        });
-                    }
-                });
-            }
-
-            function openViewModal(taskId) {
-                $.ajax({
-                    url: `/api/tasks/${taskId}`,
-                    method: 'GET',
-                    success: function(task) {
-                        // Populate modal fields
-                        $('#view_title').text(task.title || 'No title');
-                        $('#view_description').text(task.description || 'No description');
-                        $('#view_due_time').text(task.time || 'Not set');
-                        $('#view_created_at').text(new Date(task.created_at).toLocaleString());
-
-                        // Set status badge with appropriate color
-                        const status = task.status || 'Pending';
-                        $('#view_status_badge')
-                            .text(status)
-                            .removeClass()
-                            .addClass(`px-3 py-1 text-sm rounded-full ${getStatusColorClass(status)}`);
-
-                        // Show attachment if exists
-                        if (task.attachment) {
-                            $('#view_attachment').html(`
-                                <div class="mt-4 space-y-2">
-                                    <img src="${FILESYSTEM_URL}/storage/${task.attachment}"
-                                        alt="Attachment"
-                                        class="object-cover w-32 h-32 border rounded shadow" />
-
-                                    <a href="${FILESYSTEM_URL}/storage/${task.attachment}"
-                                    download
-                                    class="inline-block px-4 py-2 text-white transition bg-blue-600 rounded hover:bg-blue-700">
-                                         <i class="fas fa-download"></i>
-                                    </a>
-                                </div>
-                            `);
-                        } else {
-                            $('#view_attachment').html('<p class="mt-4 text-gray-500">No attachment</p>');
-                        }
-
-                        // Open modal
-                        window.dispatchEvent(new CustomEvent('open-modal', {
-                            detail: 'view-task'
-                        }));
-                    },
-                    error: function() {
-                        Swal.fire('Error', 'Unable to fetch task details', 'error');
-                    }
-                });
-            }
-
-            function getStatusColorClass(status) {
-                switch (status.toLowerCase()) {
-                    case 'completed':
-                        return 'bg-green-100 text-green-800';
-                    case 'in progress':
-                        return 'bg-blue-100 text-blue-800';
-                    case 'pending':
-                        return 'bg-yellow-100 text-yellow-800';
-                    default:
-                        return 'bg-gray-100 text-gray-800';
-                }
-            }
         </script>
     @endpush
 </x-app-layout>

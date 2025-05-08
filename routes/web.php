@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::get('/', function () {
-//     return view('display');
-// });
 
 Route::get('/events/upcoming', [EventController::class, 'upcomingEvents']);
 Route::get('/events/{id}', [EventController::class, 'showFrount']);
