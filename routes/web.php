@@ -1,21 +1,10 @@
 <?php
 
-use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Blog;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
-
-//Resources Route
-Route::middleware(['auth', 'verified'])->group(function () {
-
-   // Route::resource('blog', BlogController::class);
-
-   Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-   
 });
 
 Route::get('/dashboard', function () {
