@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-gray-800">
-                {{ __('My Tasks') }}
+                Event List
             </h2>
-            <button x-data="" @click.prevent="$dispatch('open-modal', 'create-task')"
+            <button x-data="" @click.prevent="$dispatch('open-modal', 'create-event')"
                 class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                + Create Task
+                + Create Event
             </button>
         </div>
     </x-slot>
@@ -16,36 +16,36 @@
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200" id="taskTable">
+                        <table class="min-w-full divide-y divide-gray-200" id="eventTable">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Title
                                     </th>
-                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Due Time
+                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Venue
                                     </th>
-                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Status
+                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Date
                                     </th>
                                     <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Actions
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody id="taskList" class="bg-white divide-y divide-gray-200">
+                            <tbody id="eventList" class="bg-white divide-y divide-gray-200">
                             </tbody>
                         </table>
                     </div>
-                    <div id="noTasks" class="hidden mt-4 text-center text-gray-500">No tasks found.</div>
+                    <div id="noEvents" class="hidden mt-4 text-center text-gray-500">No events found.</div>
                 </div>
             </div>
         </div>
     </div>
 
-    @component('components.modal.task-create')
+    @component('components.modal.event.create')
     @endcomponent
 
-    @component('components.modal.task-edit')
+    @component('components.modal.event.edit')
     @endcomponent
 
-    @component('components.modal.task-view')
+    @component('components.modal.event.view')
     @endcomponent
 
     @push('scripts')
@@ -58,54 +58,52 @@
 
             function fetchTasks() {
                 $.ajax({
-                    url: '/api/tasks',
+                    url: '/api/events',
                     method: 'GET',
-                    success: function(tasks) {
-                        if (tasks.length === 0) {
-                            $('#taskList').empty();
-                            $('#noTasks').removeClass('hidden');
+                    success: function(events) {
+                        if (events.length === 0) {
+                            $('#eventList').empty();
+                            $('#noEvents').removeClass('hidden');
                             return;
                         }
 
-                        $('#noTasks').addClass('hidden');
+                        $('#noEvents').addClass('hidden');
                         let html = '';
-                        tasks.forEach(task => {
-                            const status = task.status ?? 'Pending';
+                        events.forEach(event => {
+                            const status = event.status ?? 'Pending';
                             const statusClass = getStatusColorClass(status);
 
                             html += `
                                     <tr>
-                                        <td class="px-4 py-2">${task.title}</td>
-                                        <td class="px-4 py-2">${task.time ?? 'N/A'}</td>
+                                        <td class="px-4 py-2">${event.title}</td>
+                                        <td class="px-4 py-2">${event.venue ?? 'N/A'}</td>
                                         <td class="px-4 py-2">
-                                            <span class="px-3 py-1 text-sm rounded-full ${statusClass}">
-                                            ${status}
-                                        </span>
+                                         ${event.date}
                                             </td>
                                         <td class="px-4 py-2 space-x-2">
-                                              <button onclick="openViewModal(${task.id})" class="text-blue-600 hover:text-blue-800">
+                                              <button onclick="openViewModal(${event.id})" class="text-blue-600 hover:text-blue-800">
                                                     <i class="fas fa-eye"></i>
                                             </button>
-                                            <button onclick="openEditModal(${task.id})" class="text-yellow-500 hover:text-yellow-700">
+                                            <button onclick="openEditModal(${event.id})" class="text-yellow-500 hover:text-yellow-700">
                                                     <i class="fas fa-edit"></i>
                                             </button>
-                                            <button onclick="deleteTask(${task.id})" class="text-red-600 hover:text-red-800">
+                                            <button onclick="deleteevent(${event.id})" class="text-red-600 hover:text-red-800">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>                                    </tr>
                                 `;
                         });
-                        $('#taskList').html(html);
+                        $('#eventList').html(html);
                     },
                     error: function() {
-                        Swal.fire('Error', 'Unable to fetch tasks. Please try again later.', 'error');
+                        Swal.fire('Error', 'Unable to fetch events. Please try again later.', 'error');
                     }
                 });
             }
 
             function openEditModal(taskId) {
                 $.ajax({
-                    url: `/api/tasks/${taskId}`,
+                    url: `/api/events/${taskId}`,
                     method: 'GET',
                     success: function(task) {
                         console.log(task);

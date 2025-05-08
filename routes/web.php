@@ -1,11 +1,21 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+// Route::get('/', function () {
+//     return view('display');
+// });
+
+Route::get('/events/upcoming', [EventController::class, 'upcomingEvents']);
+Route::get('/events/{id}', [EventController::class, 'showFrount']);
+
+Route::post('/registrations', [RegistrationController::class, 'store']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

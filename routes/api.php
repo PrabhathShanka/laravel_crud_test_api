@@ -29,8 +29,7 @@
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-
-
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,4 +41,13 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware(['web', 'auth.session'])->group(function () {
     Route::apiResource('tasks', TaskController::class);
+
+    Route::apiResource('events', EventController::class);
 });
+
+// routes/api.php
+//oute::get('/events/upcoming', [EventController::class, 'upcomingEvents']);
+
+
+
+
