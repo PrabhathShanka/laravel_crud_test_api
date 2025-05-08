@@ -108,7 +108,7 @@
                 window.dispatchEvent(new CustomEvent('close-modal', {
                     detail: 'create-event'
                 }));
-                fetchTasks(); // Optional function to refresh event list
+                fetchTasks();
             },
             error: function (xhr) {
                 if (xhr.status === 422) {

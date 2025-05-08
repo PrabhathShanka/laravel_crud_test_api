@@ -71,7 +71,7 @@
                         let html = '';
                         events.forEach(event => {
                             const status = event.status ?? 'Pending';
-                            
+
                             html += `
                                     <tr>
                                         <td class="px-4 py-2">${event.title}</td>
@@ -80,14 +80,14 @@
                                          ${event.date}
                                             </td>
                                         <td class="px-4 py-2 space-x-2">
-                                              <button onclick="openViewModal(${event.id})" class="text-blue-600 hover:text-blue-800">
+                                              <button onclick="openViewModal(${event.id} )" class="text-blue-600 hover:text-blue-800">
                                                     <i class="fas fa-eye"></i>
-                                            </button>
+                                                </button>
                                             <button onclick="openEditModal(${event.id})" class="text-yellow-500 hover:text-yellow-700">
                                                     <i class="fas fa-edit"></i>
                                             </button>
-                                            <button onclick="deleteevent(${event.id})" class="text-red-600 hover:text-red-800">
-                                                <i class="fas fa-trash"></i>
+                                            <button onclick="deleteEvent(${event.id})" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
                                             </button>
                                         </td>                                    </tr>
                                 `;
@@ -96,6 +96,41 @@
                     },
                     error: function() {
                         Swal.fire('Error', 'Unable to fetch events. Please try again later.', 'error');
+                    }
+                });
+            }
+
+            function deleteEvent(eventId) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This will permanently delete the event.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/api/events/${eventId}`,
+                            type: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                Swal.fire('Deleted!', response.message, 'success');
+                                fetchTasks();
+                            },
+                            error: function(xhr) {
+                                if (xhr.status === 403) {
+                                    Swal.fire('Forbidden',
+                                        'You do not have permission to delete this event.', 'error');
+                                } else {
+                                    Swal.fire('Error', 'Something went wrong while deleting the event.',
+                                        'error');
+                                }
+                            }
+                        });
                     }
                 });
             }

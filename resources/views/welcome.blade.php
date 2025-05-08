@@ -19,11 +19,10 @@
     @endif
 </head>
 
-<body
-    class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
     <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
         @if (Route::has('login'))
-            <nav class="flex items-center justify-end gap-4">
+            <nav class="flex flex-col items-center justify-end gap-4 lg:flex-row">
                 @auth
                     <a href="{{ url('/dashboard') }}"
                         class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
@@ -46,12 +45,10 @@
         @endif
     </header>
 
-    <div
-        class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
-        <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
+    <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
+        <main class="flex flex-col-reverse max-w-full lg:flex-row lg:max-w-4xl">
             <div class="w-full lg:w-[438px] lg:ml-0 -ml-8 lg:-mt-[6.6rem] -mt-[4.9rem]">
-                <div
-                    class="bg-white dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] rounded-t-lg lg:rounded-t-none lg:rounded-tl-lg lg:rounded-r-lg p-6 lg:p-8">
+                <div class="bg-white dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] rounded-t-lg lg:rounded-t-none lg:rounded-tl-lg lg:rounded-r-lg p-6 lg:p-8">
                     <h2 class="text-sm font-medium mb-6 dark:text-[#EDEDEC]">Upcoming Events</h2>
 
                     <div id="events-container" class="space-y-4">
@@ -70,8 +67,7 @@
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div
-                class="inline-block align-bottom bg-white dark:bg-[#161615] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white dark:bg-[#161615] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="w-full mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -95,40 +91,32 @@
         </div>
     </div>
 
-
     <!-- Registration Modal -->
     <div id="registration-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4 text-center sm:block">
             <div class="fixed inset-0 bg-gray-500 opacity-75"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-            <div
-                class="inline-block bg-white dark:bg-[#161615] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-md w-full p-6">
+            <div class="inline-block bg-white dark:bg-[#161615] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-md w-full p-6">
                 <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">Event Registration</h3>
                 <form id="registration-form">
                     <input type="hidden" name="event_id" id="register-event-id">
                     <div class="mb-3">
-                        <input type="text" name="name" class="w-full px-3 py-2 border rounded"
-                            placeholder="Your Name" required>
+                        <input type="text" name="name" class="w-full px-3 py-2 border rounded" placeholder="Your Name" required>
                     </div>
                     <div class="mb-3">
-                        <input type="email" name="email" class="w-full px-3 py-2 border rounded"
-                            placeholder="Your Email" required>
+                        <input type="email" name="email" class="w-full px-3 py-2 border rounded" placeholder="Your Email" required>
                     </div>
                     <div class="mb-3">
-                        <input type="text" name="phone" class="w-full px-3 py-2 border rounded"
-                            placeholder="Your Phone" required>
+                        <input type="text" name="phone" class="w-full px-3 py-2 border rounded" placeholder="Your Phone" required>
                     </div>
                     <div class="flex justify-end">
-                        <button type="submit"
-                            class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Submit</button>
-                        <button type="button" class="px-4 py-2 ml-2 bg-red-600 border rounded"
-                            onclick="closeRegisterForm()">Cancel</button>
+                        <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Submit</button>
+                        <button type="button" class="px-4 py-2 ml-2 bg-red-600 border rounded" onclick="closeRegisterForm()">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

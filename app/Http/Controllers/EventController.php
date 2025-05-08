@@ -53,36 +53,28 @@ class EventController extends Controller
     }
 
     public function showFrount($id)
-{
-    try {
-        $event = Event::findOrFail($id);
-        return response()->json($event);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Event not found'], 404);
-    }
-}
-
-    public function show(Task $task)
     {
         try {
-          //  Gate::authorize('view', $task);
-            return response()->json($task, 200);
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-            Log::warning('Unauthorized task view attempt', [
-                'user_id' => Auth::id(),
-                'task_id' => $task->id,
-            ]);
-            return response()->json(['error' => 'Forbidden'], 403);
+            $event = Event::findOrFail($id);
+            return response()->json($event);
         } catch (\Exception $e) {
-            Log::error('Error fetching task', [
-                'user_id' => Auth::id(),
-                'task_id' => $task->id,
-                'exception' => $e,
-            ]);
-            return response()->json(['error' => 'Unable to fetch task.'], 500);
+            return response()->json(['error' => 'Event not found'], 404);
         }
     }
 
+    public function show(Event $event)
+{
+    return response()->json([
+        'id' => $event->id,
+        'title' => $event->title,
+        'description' => $event->description,
+        'venue' => $event->venue,
+        'date' => $event->date,
+        'time' => $event->time,
+        'image' => $event->image ? asset('storage/' . $event->image) : null,
+        'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+    ]);
+}
     public function store(StoreEventRequest $request)
     {
         try {
@@ -144,33 +136,32 @@ class EventController extends Controller
         }
     }
 
-    public function destroy(Task $task)
+    public function destroy(Event $event)
     {
         try {
-            Gate::authorize('delete', $task);
 
-            if ($task->attachment) {
-                Storage::disk('public')->delete($task->attachment);
+            if ($event->image) {
+                Storage::disk('public')->delete($event->image);
             }
 
-            $task->delete();
+            $event->delete();
 
-            return response()->json(['message' => 'Task deleted.'], 200);
+            return response()->json(['message' => 'Event deleted.'], 200);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-            Log::warning('Unauthorized task delete attempt', [
+            Log::warning('Unauthorized event delete attempt', [
                 'user_id' => Auth::id(),
-                'task_id' => $task->id,
+                'event_id' => $event->id,
             ]);
 
             return response()->json(['error' => 'Forbidden'], 403);
         } catch (\Exception $e) {
-            Log::error('Error deleting task', [
+            Log::error('Error deleting event', [
                 'user_id' => Auth::id(),
-                'task_id' => $task->id,
+                'event_id' => $event->id,
                 'exception' => $e,
             ]);
 
-            return response()->json(['error' => 'Unable to delete task.'], 500);
+            return response()->json(['error' => 'Unable to delete event.'], 500);
         }
     }
 }
