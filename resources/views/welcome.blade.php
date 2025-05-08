@@ -134,16 +134,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             const FILESYSTEM_URL = "{{ env('FILESYSTEM_URL') }}";
 
-            // Modal elements
             const modal = document.getElementById('event-modal');
             const closeModalBtn = document.getElementById('close-modal');
 
-            // Close modal when clicking the close button
             closeModalBtn.addEventListener('click', function() {
                 modal.classList.add('hidden');
             });
 
-            // Close modal when clicking outside the modal content
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     modal.classList.add('hidden');
@@ -234,7 +231,6 @@
             }
         });
 
-        // Global function to view event details
         function viewEventDetails(eventId) {
             fetch(`/events/${eventId}`)
                 .then(response => {
@@ -247,7 +243,6 @@
                     const FILESYSTEM_URL = "{{ env('FILESYSTEM_URL') }}";
                     const modal = document.getElementById('event-modal');
 
-                    // Populate modal with event data
                     document.getElementById('modal-title').textContent = event.title;
 
                     const modalImage = document.getElementById('modal-image');
@@ -264,7 +259,6 @@
                     document.getElementById('modal-description').textContent = event.description ||
                         'No description provided.';
 
-                    // Show modal
                     modal.classList.remove('hidden');
                 })
                 .catch(error => {
@@ -294,7 +288,6 @@
                 });
             }
         }
-
 
         function openRegisterForm(eventId) {
             document.getElementById('register-event-id').value = eventId;
